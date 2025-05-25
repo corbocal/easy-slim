@@ -1,0 +1,1 @@
+A lightweight package for a quickstart with slim-php.

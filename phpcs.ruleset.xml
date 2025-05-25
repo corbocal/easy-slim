@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PSR12"
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/refs/heads/master/phpcs.xsd">
+
+    <description>PSR12 Standard</description>
+
+    <arg name="basepath" value="." />
+    <arg name="cache" value=".phpcs-cache" />
+    <arg name="colors" />
+    <arg name="extensions" value="php" />
+    <config name="ignore_warnings_on_exit" value="true" />
+    <exclude-pattern>vendor/</exclude-pattern>
+
+    <rule ref="PSR12" />
+    <!-- https://github.com/squizlabs/PHP_CodeSniffer/blob/master/src/Standards/PSR12/ruleset.xml -->
+
+    <rule ref="Generic.PHP.RequireStrictTypes" />
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120" />
+            <property name="absoluteLineLimit" value="150" />
+        </properties>
+    </rule>
+
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="phpinfo" value="null" />
+                <element key="var_dump" value="null" />
+                <element key="debug_zval_dump" value="null" />
+                <element key="dump" value="null" />
+                <element key="dd" value="null" />
+                <element key="d" value="null" />
+            </property>
+        </properties>
+    </rule>
+</ruleset>
