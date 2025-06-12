@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Actions;
+namespace Corbocal\EasySlim\Trait;
 
-use Slim\Http\ServerRequest as Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 trait RequestTrait
 {
@@ -42,10 +42,5 @@ trait RequestTrait
     public function getQueryParams(): array
     {
         return $this->request->getQueryParams();
-    }
-
-    public function getQueryParam(string $name): mixed
-    {
-        return $this->request->getQueryParam($name);
     }
 }

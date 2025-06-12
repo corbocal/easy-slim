@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Actions;
+namespace Corbocal\EasySlim\Trait;
 
-use Corbocal\EasySlim\Traits\HttpCodesTrait;
 use Slim\Http\Response;
 
 trait ResponseTrait
 {
-    use HttpCodesTrait;
-
     // protected Response $response;
 
     protected function responseJsonOk(

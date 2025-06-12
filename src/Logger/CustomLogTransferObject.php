@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Corbocal\EasySlim\Logger;
 
+use Corbocal\EasySlim\Enums\HttpCodesEnum;
+use Corbocal\EasySlim\Enums\HttpHeadersEnum;
+use Corbocal\EasySlim\Enums\PsrLevelsEnum;
 use Corbocal\EasySlim\Exceptions\AbstractApiException;
-use Corbocal\EasySlim\Traits\HttpCodesTrait;
-use Corbocal\EasySlim\Traits\HttpHeadersTrait;
-use Corbocal\EasySlim\Traits\LogLevelsTrait;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Routing\Route;
 
@@ -16,15 +16,15 @@ use Slim\Routing\Route;
  */
 class CustomLogTransferObject
 {
-    use LogLevelsTrait;
-    use HttpCodesTrait;
-    use HttpHeadersTrait;
-
     private const string SLIM_ROUTE = "__route__";
+    private const string PAYLOAD_INDEX = "payload";
+    private const string EXCEPTION_INDEX = "exception";
     public const string UUID_PATTERN = "/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/";
+    public ?string $level = null;
+    public ?int $httpCode = null;
 
     /**
-     * @param ?string $logLevel
+     * @param ?PsrLevelsEnum $level
      * @param ?string $date
      * @param ?string $requestId
      * @param ?float $duration
@@ -34,14 +34,14 @@ class CustomLogTransferObject
      * @param ?string $file
      * @param ?int $line
      * @param ?string $uri
-     * @param ?int $httpCode
+     * @param ?HttpCodesEnum $httpCode
      * @param ?string $ressourceId
      * @param ?string $message
      * @param ?array<mixed> $output
      * @param ?string $userId
      */
     private function __construct(
-        public ?string $logLevel = null,
+        ?PsrLevelsEnum $level = null,
         public ?string $date = null,
         public ?string $requestId = null,
         public ?float $duration = null,
@@ -51,26 +51,26 @@ class CustomLogTransferObject
         public ?string $file = null,
         public ?int $line = null,
         public ?string $uri = null,
-        public ?int $httpCode = null,
+        ?HttpCodesEnum $httpCode = null,
         public ?string $ressourceId = null,
         public ?string $message = null,
         public ?array $output = null,
         public ?string $userId = null,
     ) {
-        $this->logLevel = $logLevel ?? self::PSR_DEBUG;
+        $this->level = $level->value ?? PsrLevelsEnum::DEBUG->value;
         $this->date ??= (new \DateTimeImmutable())->format("Y-m-d H:i:s");
         $this->requestId = $requestId;
-        $requestTime = is_numeric($_SERVER[self::HEADER_REQUEST_TIME_FLOAT]) ? $_SERVER[self::HEADER_REQUEST_TIME_FLOAT] : null;
+        $requestTime = is_numeric($_SERVER[HttpHeadersEnum::REQUEST_TIME_FLOAT->value]) ? $_SERVER[HttpHeadersEnum::REQUEST_TIME_FLOAT->value] : null;
         $this->duration = $duration ?? round((microtime(true) - floatval($requestTime)) * 1000);
         $this->ip = $ip ?: null;
         $this->host = $host ?? gethostname() ?: null;
-        $httpReferer = is_string($_SERVER[self::HEADER_HTTP_REFERER]) ? $_SERVER[self::HEADER_HTTP_REFERER] : null;
+        $httpReferer = is_string($_SERVER[HttpHeadersEnum::HTTP_REFERER->value]) ? $_SERVER[HttpHeadersEnum::HTTP_REFERER->value] : null;
         $this->referer = $referer ?: $httpReferer ?: null;
         $this->file = $file;
         $this->line = $line;
-        $stringUri = is_string($_SERVER[self::HEADER_HTTP_REFERER]) ? $_SERVER[self::HEADER_HTTP_REFERER] : null;
+        $stringUri = is_string($_SERVER[HttpHeadersEnum::HTTP_REFERER->value]) ? $_SERVER[HttpHeadersEnum::HTTP_REFERER->value] : null;
         $this->uri = $uri ?? $stringUri;
-        $this->httpCode = $httpCode ?? 200;
+        $this->httpCode = $httpCode->value ?? 200;
         $this->ressourceId = $ressourceId;
         $this->message = $message;
         $this->output = $output;
@@ -97,10 +97,10 @@ class CustomLogTransferObject
     }
 
     /**
-     * @param ?string $level
+     * @param ?PsrLevelsEnum $level
      * @param ?string $file
      * @param ?int $line
-     * @param ?int $httpCode
+     * @param ?HttpCodesEnum $httpCode
      * @param ?string $ressourceId
      * @param ?string $message
      * @param ?array<mixed> $output
@@ -109,10 +109,10 @@ class CustomLogTransferObject
      * @return CustomLogTransferObject
      */
     public static function create(
-        ?string $level,
+        ?PsrLevelsEnum $level,
         ?string $file,
         ?int $line,
-        ?int $httpCode,
+        ?HttpCodesEnum $httpCode,
         ?string $ressourceId,
         ?string $message,
         ?array $output,
@@ -120,13 +120,13 @@ class CustomLogTransferObject
         ?Request $request
     ): self {
         return new CustomLogTransferObject(
-            $level ?? self::PSR_ERROR,
+            $level ?? PsrLevelsEnum::DEBUG,
             null,
-            $request?->getHeaderLine(self::HEADER_X_REQUEST_ID),
+            $request?->getHeaderLine(HttpHeadersEnum::X_REQUEST_ID->value),
             null,
-            $request?->getHeaderLine(self::HEADER_HTTP_X_FORWARDED_FOR),
-            $request?->getHeaderLine(self::HEADER_HTTP_X_FORWARDED_HOST),
-            $request?->getHeaderLine(self::HEADER_HTTP_REFERER),
+            $request?->getHeaderLine(HttpHeadersEnum::HTTP_X_FORWARDED_FOR->value),
+            $request?->getHeaderLine(HttpHeadersEnum::HTTP_X_FORWARDED_HOST->value),
+            $request?->getHeaderLine(HttpHeadersEnum::HTTP_REFERER->value),
             $file,
             $line,
             $request?->getUri()->__toString(),
@@ -141,7 +141,7 @@ class CustomLogTransferObject
     public static function createFromApiException(AbstractApiException $exception, Request $request): self
     {
         return self::create(
-            self::PSR_ERROR,
+            PsrLevelsEnum::DEBUG,
             $exception->getFile(),
             $exception->getLine(),
             $exception->getHttpCode(),
@@ -156,7 +156,7 @@ class CustomLogTransferObject
     public static function createFromThrowable(\Throwable $e, Request $request): self
     {
         return self::create(
-            self::PSR_ERROR,
+            PsrLevelsEnum::DEBUG,
             $e->getFile(),
             $e->getLine(),
             self::isHttpCode($e->getCode()) ? $e->getCode() : self::HTTP_INTERNAL_SERVER_ERROR,
@@ -166,6 +166,22 @@ class CustomLogTransferObject
             null,
             $request
         );
+    }
+
+    /**
+     * @param \Throwable $e
+     * @param Request $request
+     * @return array{
+     *  exception: string,
+     *  payload: mixed
+     * }
+     */
+    private static function formatOutputFromThrowable(\Throwable $e, Request $request): array
+    {
+        return [
+            self::EXCEPTION_INDEX => get_class($e),
+            self::PAYLOAD_INDEX => $request->getParsedBody(),
+        ];
     }
 
     private static function recoverIdentifiersParameters(?Request $request, ?string $pattern = null): ?string
@@ -190,19 +206,4 @@ class CustomLogTransferObject
         return $result;
     }
 
-    /**
-     * @param \Throwable $e
-     * @param Request $request
-     * @return array{
-     *  exception: string,
-     *  payload: mixed
-     * }
-     */
-    private static function formatOutputFromThrowable(\Throwable $e, Request $request): array
-    {
-        return [
-            "exception" => get_class($e),
-            "payload" => $request->getParsedBody(),
-        ];
-    }
 }

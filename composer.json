@@ -11,11 +11,10 @@
         }
     ],
     "require": {
-        "php": ">=8.4",
         "monolog/monolog": "^3.9",
-        "psr/http-server-middleware": "^1.0",
+        "php": ">=8.4",
         "psr/log": "^3.0",
-        "slim/http": "^1.4",
+        "slim/psr": "^1.7",
         "slim/slim": "^4.14"
     },
     "require-dev": {
@@ -26,7 +25,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Corbocal\\EasySlim\\": "src/",
+            "Corbocal\\EasySlim\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Corbocal\\EasySlim\\Tests\\": "tests/"
         }
     }

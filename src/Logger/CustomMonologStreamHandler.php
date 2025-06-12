@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Corbocal\EasySlim\Logger;
 
-use Corbocal\EasySlim\Traits\LogLevelsTrait;
+use Corbocal\EasySlim\Enums\MonologLevelsEnum;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
@@ -22,17 +22,17 @@ class CustomMonologStreamHandler extends StreamHandler
     /**
      * Summary of __construct
      * @param string $file path to the file that will record
-     * @param LogLevelsTrait::* $level
+     * @param MonologLevelsEnum $minLevel
      * @param bool $bubble
      */
     public function __construct(
         string $file,
-        int|string $level = 100,
+        MonologLevelsEnum $minLevel = MonologLevelsEnum::DEBUG,
         bool $bubble = true
     ) {
         parent::__construct(
             $file,
-            $level,
+            $minLevel->value,
             $bubble
         );
         $this->pushProcessor(
