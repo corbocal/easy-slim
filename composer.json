@@ -14,7 +14,7 @@
         "monolog/monolog": "^3.9",
         "php": ">=8.4",
         "psr/log": "^3.0",
-        "slim/psr": "^1.7",
+        "slim/psr7": "^1.7",
         "slim/slim": "^4.14"
     },
     "require-dev": {
