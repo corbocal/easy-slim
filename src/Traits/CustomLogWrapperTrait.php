@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Trait;
+namespace Corbocal\EasySlim\Traits;
 
 use Corbocal\EasySlim\Enums\HttpCodesEnum;
 use Corbocal\EasySlim\Enums\PsrLevelsEnum;
@@ -10,12 +10,14 @@ use Corbocal\EasySlim\Logger\CustomLogTransferObject;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 
-trait LogWrapperTrait
+
+trait CustomLogWrapperTrait
 {
     // protected LoggerInterface $logger;
     // protected Request $request;
 
     /**
+     * Returns the string representation of a `CustomLogTransfertObject` as a string
      * @param ?string $ressourceId
      * @param ?PsrLevelsEnum $level
      * @param ?HttpCodesEnum $httpCode
@@ -23,6 +25,7 @@ trait LogWrapperTrait
      * @param ?array<mixed> $payload
      * @param ?string $userId
      * @return string
+     * @see CustomLogTransferObject
      */
     private function getCustomLogAsString(
         ?string $ressourceId,
@@ -36,7 +39,7 @@ trait LogWrapperTrait
             $level,
             get_called_class(),
             intval(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]['line'] ?? 0) ?: null,
-            $httpCode->value,
+            $httpCode,
             $ressourceId,
             $message,
             ["payload" => $payload],
@@ -46,6 +49,7 @@ trait LogWrapperTrait
 
         return $customLogObject->__tostring();
     }
+
     /**
      * @param string $ressourceId
      * @param HttpCodesEnum $httpCode

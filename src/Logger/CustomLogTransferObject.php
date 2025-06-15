@@ -16,10 +16,11 @@ use Slim\Routing\Route;
  */
 class CustomLogTransferObject
 {
+    public const string UUID_PATTERN = "/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i";
     private const string SLIM_ROUTE = "__route__";
-    private const string PAYLOAD_INDEX = "payload";
-    private const string EXCEPTION_INDEX = "exception";
-    public const string UUID_PATTERN = "/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/";
+    private const string INDEX_PAYLOAD = "payload";
+    private const string INDEX_EXCEPTION = "exception";
+
     public ?string $level = null;
     public ?int $httpCode = null;
 
@@ -129,7 +130,7 @@ class CustomLogTransferObject
             $request?->getHeaderLine(HttpHeadersEnum::HTTP_REFERER->value),
             $file,
             $line,
-            $request?->getUri()->__toString(),
+            $request?->getUri()?->__toString(),
             $httpCode,
             $ressourceId ?? self::recoverIdentifiersParameters($request),
             $message,
@@ -153,35 +154,22 @@ class CustomLogTransferObject
         );
     }
 
-    public static function createFromThrowable(\Throwable $e, Request $request): self
+    public static function createFromAnyThrowable(\Throwable $e, Request $request): self
     {
         return self::create(
-            PsrLevelsEnum::DEBUG,
+            PsrLevelsEnum::ERROR,
             $e->getFile(),
             $e->getLine(),
             self::isHttpCode($e->getCode()) ? $e->getCode() : self::HTTP_INTERNAL_SERVER_ERROR,
             null,
             $e->getMessage(),
-            self::formatOutputFromThrowable($e, $request),
+            [
+                self::INDEX_EXCEPTION => get_class($e),
+                self::INDEX_PAYLOAD => $request->getParsedBody(),
+            ],
             null,
             $request
         );
-    }
-
-    /**
-     * @param \Throwable $e
-     * @param Request $request
-     * @return array{
-     *  exception: string,
-     *  payload: mixed
-     * }
-     */
-    private static function formatOutputFromThrowable(\Throwable $e, Request $request): array
-    {
-        return [
-            self::EXCEPTION_INDEX => get_class($e),
-            self::PAYLOAD_INDEX => $request->getParsedBody(),
-        ];
     }
 
     private static function recoverIdentifiersParameters(?Request $request, ?string $pattern = null): ?string

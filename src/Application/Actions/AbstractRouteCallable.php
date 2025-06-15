@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Actions;
+namespace Corbocal\EasySlim\Application\Actions;
 
-use Corbocal\EasySlim\Trait\RequestTrait;
-use Corbocal\EasySlim\Trait\ResponseTrait;
+use Corbocal\EasySlim\Traits\RequestTrait;
+use Corbocal\EasySlim\Traits\ResponseTrait;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;

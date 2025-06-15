@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Trait;
+namespace Corbocal\EasySlim\Traits;
 
 use Slim\Http\Response;
 

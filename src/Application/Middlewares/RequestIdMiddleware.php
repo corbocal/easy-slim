@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Middlewares;
+namespace Corbocal\EasySlim\Application\Middlewares;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

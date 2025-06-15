@@ -16,7 +16,7 @@ enum MonologLevelsEnum: int
     case DEBUG = 100;
 
     /**
-     * @return array<string>
+     * @return string[]
      */
     public static function all(): array
     {

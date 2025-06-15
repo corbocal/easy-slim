@@ -73,7 +73,7 @@ enum HttpCodesEnum: int
     case NETWORK_AUTHENTICATION_REQUIRED = 511;
 
     /**
-     * @return array<int>
+     * @return int[]
      */
     public static function all(): array
     {
@@ -81,11 +81,11 @@ enum HttpCodesEnum: int
     }
 
     /**
-     * Code between 100 and 199 are informational.
+     * Checks if parameter is an actual HTTP code
      * @param int $code
      * @return bool
      */
-    public static function isHttpCode(int $code): bool
+    public static function isActualHttpCode(int $code): bool
     {
         return in_array($code, self::all());
     }
@@ -141,7 +141,7 @@ enum HttpCodesEnum: int
     }
 
     /**
-     * Check if the code is an error (either client or server).
+     * Wrapper for `isServerError` and `isClientError`
      * @param int $code
      * @return bool
      */

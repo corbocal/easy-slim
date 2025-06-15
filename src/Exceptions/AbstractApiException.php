@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Corbocal\EasySlim\Exceptions;
 
-use Corbocal\EasySlim\Traits\HttpCodesTrait;
+use Corbocal\EasySlim\Enums\HttpCodesEnum;
 
 abstract class AbstractApiException extends \Exception
 {
-    use HttpCodesTrait;
-
-    public const int CODE = self::HTTP_INTERNAL_SERVER_ERROR;
-    protected readonly int $httpCode;
+    protected const HttpCodesEnum CODE = HttpCodesEnum::INTERNAL_SERVER_ERROR;
+    protected readonly HttpCodesEnum $httpCode;
     protected readonly string $errorMessage;
 
     protected readonly string $errorReference;
@@ -46,7 +44,7 @@ abstract class AbstractApiException extends \Exception
         array $payload = [],
     ) {
         $code = static::CODE;
-        parent::__construct($errorMessage, $code);
+        parent::__construct($errorMessage, $code->value);
         $this->httpCode = $code;
         $this->errorMessage = $errorMessage;
         $this->errorReference = $errorReference;
