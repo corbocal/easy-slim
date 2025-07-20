@@ -18,8 +18,7 @@ class SanitizerMiddleware implements MiddlewareInterface
 
     public function process(Request $request, RequestHandler $handler): Response
     {
-        $rawParsedBody = $request->getParsedBody();
-        if ($rawParsedBody !== null) {
+        if (($rawParsedBody = $request->getParsedBody()) !== null) {
             $request = $request->withParsedBody(self::sanitize($rawParsedBody));
         }
 
@@ -27,13 +26,21 @@ class SanitizerMiddleware implements MiddlewareInterface
     }
 
 
-    private static function sanitize(array|object $body)
+    /**
+     * @param array<mixed>|object $body
+     *
+     * @return array<mixed>
+     */
+    private static function sanitize(array|object $body): array
     {
+        if (!is_array($body)) {
+            $body = get_object_vars($body);
+        }
         foreach ($body as $key => &$value) {
             if (is_array($value)) {
                 $value = self::sanitize($value);
             }
-            if (is_string($key)) {
+            if (is_string($value)) {
                 $body[$key] = trim($value);
             }
         }

@@ -6,7 +6,7 @@ namespace Corbocal\EasySlim\Traits;
 
 trait JsonTrait
 {
-    public static function jsonEncode(
+    public function jsonEncode(
         mixed $value,
         int $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
         int $depth = 512
@@ -19,7 +19,7 @@ trait JsonTrait
         ) ?: "";
     }
 
-    public static function jsonEncodePrettyPrintResponse(
+    public function jsonEncodePrettyPrintResponse(
         mixed $value,
         int $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT,
         int $depth = 512
