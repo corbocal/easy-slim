@@ -201,7 +201,7 @@ class ApiErrorHandler implements ErrorHandlerInterface
     private function useBacktrace(): ?array
     {
         if ($this->displayErrorDetails || ($this->logErrors && $this->logErrorDetails)) {
-            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 11);
+            $backtrace = $this->exception->getTrace();
             foreach ($backtrace as $key => &$value) {
                 if (isset($backtrace[$key]["class"])) {
                     $class = $value["class"] ?? "";
