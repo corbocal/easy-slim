@@ -55,6 +55,7 @@ final class AuthenticationWrapper extends AbstractHandler implements Authenticat
             AuthenticatorsEnum::API_KEY => $handler = new ApiKeyHandler($this->request),
             AuthenticatorsEnum::IP => $handler = new IpHandler($this->request),
             AuthenticatorsEnum::JWT => $handler = new JwtHandler($this->request),
+            AuthenticatorsEnum::TOTP => $handler = new TotpHandler($this->request),
         };
 
         if ($handler === null) {

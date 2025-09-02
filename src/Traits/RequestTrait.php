@@ -12,7 +12,7 @@ trait RequestTrait
     protected Request $request;
 
     /**
-     * Will return the number of milliseconds ellapsed between the moment the request entered the first middleware,
+     * Returns the number of ellapsed milliseconds between the moment the request entered the first middleware and this function call.
      *
      * @return int
      */
@@ -39,5 +39,19 @@ trait RequestTrait
         $value = $this->request->getHeaderLine($header);
 
         return empty($value) ? null : (string) $value;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function grabParsedBody(): ?array
+    {
+        $parsed = $this->request->getParsedBody();
+
+        if (is_object($parsed)) {
+            $parsed = get_object_vars($parsed);
+        }
+
+        return $parsed;
     }
 }

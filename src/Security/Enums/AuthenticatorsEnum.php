@@ -9,4 +9,5 @@ enum AuthenticatorsEnum: string
     case API_KEY = "API-KEY";
     case IP = "IP";
     case JWT = "JWT";
+    case TOTP = "TOTP";
 }

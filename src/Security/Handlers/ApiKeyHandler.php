@@ -14,13 +14,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 final class ApiKeyHandler extends AbstractHandler implements AuthenticatorInterface
 {
-    use RequestTrait;
-
-    public function __construct(
-        protected Request $request
-    ) {
-    }
-
     public function handle(): bool
     {
         return true;
