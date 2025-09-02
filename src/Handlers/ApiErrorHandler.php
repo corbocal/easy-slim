@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Application\Handlers;
+namespace Corbocal\EasySlim\Handlers;
 
 use Corbocal\EasySlim\Enums\Http\HeadersEnum;
 use Corbocal\EasySlim\Enums\Http\StatusCodesEnum;
-use Corbocal\EasySlim\Enums\PsrLevelsEnum;
+use Corbocal\EasySlim\Enums\Logger\PsrLevelsEnum;
 use Corbocal\EasySlim\Exceptions\ApiException;
-use Corbocal\EasySlim\Logger\DTO\ResponseLog;
+use Corbocal\EasySlim\Logger\Dto\ResponseLog;
 use Corbocal\EasySlim\Traits\JsonTrait;
 use Corbocal\EasySlim\Traits\RequestTrait;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -105,11 +105,11 @@ class ApiErrorHandler implements ErrorHandlerInterface
                 $dataToLog['backtrace'] = $this->backtrace;
             }
 
-            $this->logger->error(self::jsonEncode($dataToLog));
+            $this->logger->error($this->jsonEncode($dataToLog));
         }
 
         $response = $this->responseFactory->createResponse($code);
-        $response->getBody()->write(self::jsonEncode($responseData));
+        $response->getBody()->write($this->jsonEncode($responseData));
         $response = $response->withHeader('Content-Type', 'application/json');
 
         return $response;
@@ -176,16 +176,11 @@ class ApiErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * Summary of determineOutputForLog
      * @param \Throwable $e
      * @return array<mixed>
      */
     private static function determineOutputForLog(\Throwable $e)
     {
-        if ($e instanceof ApiException) {
-            return $e->getOutputforLog();
-        }
-
         return [
             'message' => $e->getMessage(),
             'reference' => self::determineResponseReference($e),

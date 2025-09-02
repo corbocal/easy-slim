@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Application\Middlewares;
+namespace Corbocal\EasySlim\Middlewares;
 
 use Corbocal\EasySlim\Enums\Http\HeadersEnum;
-use Corbocal\EasySlim\Logger\LogFactory;
+use Corbocal\EasySlim\Logger\Dto\RequestLog;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
@@ -41,7 +41,7 @@ class IncomingRequestMiddleware implements MiddlewareInterface
         $request = $request->withAddedHeader(HeadersEnum::X_REQUEST_MICROTIME->value, (string) $currentMicrotime);
 
         // logging the request
-        $log = LogFactory::requestLog($request);
+        $log = RequestLog::createWithRequest($request);
         $this->logger->info($log->__tostring());
 
         return $handler->handle($request);

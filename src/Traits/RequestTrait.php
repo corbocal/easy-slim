@@ -16,11 +16,28 @@ trait RequestTrait
      *
      * @return int
      */
-    public function calculateRequestDuration(): int
+    public function calculateRequestDuration(): ?int
     {
-        (float) $microtime = $this->request->getHeaderLine(HeadersEnum::X_REQUEST_MICROTIME->value);
-        $now = microtime(true);
-        $difference = $now - (float) $microtime;
-        return (int) ($difference * 1000);
+        $result = null;
+        $microtime = $this->request->getHeaderLine(HeadersEnum::X_REQUEST_MICROTIME->value);
+        if (!empty($microtime)) {
+            $now = microtime(true);
+            $result = (int) ($now - (float) $microtime) * 1000;
+        }
+        return $result;
+    }
+
+    public function grabFromCookies(string $cookieName): ?string
+    {
+        $value = $this->request->getCookieParams()[$cookieName];
+
+        return empty($value) ? null : (string) $value;
+    }
+
+    public function grabFromHeaders(string $header): ?string
+    {
+        $value = $this->request->getHeaderLine($header);
+
+        return empty($value) ? null : (string) $value;
     }
 }

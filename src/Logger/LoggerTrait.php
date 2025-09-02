@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Corbocal\EasySlim\Logger;
 
 use Corbocal\EasySlim\Enums\Http\HeadersEnum;
-use Corbocal\EasySlim\Enums\PsrLevelsEnum;
-use Corbocal\EasySlim\Logger\DTO\Log;
+use Corbocal\EasySlim\Enums\Logger\PsrLevelsEnum;
+use Corbocal\EasySlim\Logger\Dto\Log;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Corbocal\EasySlim\Logger;
 
-use Corbocal\EasySlim\Enums\PsrLevelsEnum;
+use Corbocal\EasySlim\Enums\Logger\PsrLevelsEnum;
 use Corbocal\EasySlim\Traits\JsonTrait;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
@@ -53,7 +53,7 @@ class MonologStreamHandler extends StreamHandler
                     $entry->datetime,
                     $entry->channel,
                     $entry->level,
-                    self::jsonEncode($newMessageArray),
+                    $this->jsonEncode($newMessageArray),
                     $entry->context,
                     $entry->extra,
                     $entry->formatted

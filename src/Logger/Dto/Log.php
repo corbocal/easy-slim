@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Logger\DTO;
+namespace Corbocal\EasySlim\Logger\Dto;
 
-use Corbocal\EasySlim\Logger\DTO\AbstractLog;
+use Corbocal\EasySlim\Logger\Dto\AbstractLog;
 
 final readonly class Log extends AbstractLog
 {

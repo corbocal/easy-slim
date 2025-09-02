@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Logger\DTO;
+namespace Corbocal\EasySlim\Logger\Dto;
 
 use Corbocal\EasySlim\Traits\JsonTrait;
 
@@ -29,6 +29,6 @@ abstract readonly class AbstractLog implements \Stringable
 
     public function __tostring(): string
     {
-        return self::jsonEncode($this->__serialize());
+        return $this->jsonEncode($this->__serialize());
     }
 }

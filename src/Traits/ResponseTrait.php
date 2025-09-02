@@ -28,7 +28,7 @@ trait ResponseTrait
      */
     protected function respondJson(array $data, StatusCodesEnum $httpStatusCode = StatusCodesEnum::OK): Response
     {
-        $this->response->getBody()->write(self::jsonEncodePrettyPrintResponse($data));
+        $this->response->getBody()->write($this->jsonEncodePrettyPrintResponse($data));
 
         return $this->response
             ->withHeader('Content-Type', 'application/json')

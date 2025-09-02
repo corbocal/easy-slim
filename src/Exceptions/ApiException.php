@@ -57,24 +57,4 @@ class ApiException extends \Exception
     {
         return $this->metadata;
     }
-
-    /**
-     * @return array{
-     *  class: string,
-     *  message: string,
-     *  reference: string,
-     *  elements: mixed[],
-     *  metadata: mixed[],
-     * }
-     */
-    public function getOutputforLog(): array
-    {
-        return [
-            'message' => $this->getMessage(),
-            'reference' => $this->getReference(),
-            'elements' => $this->getElements(),
-            'class' => $this::class,
-            'metadata' => $this->getMetadata(),
-        ];
-    }
 }

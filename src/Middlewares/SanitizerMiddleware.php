@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Application\Middlewares;
+namespace Corbocal\EasySlim\Middlewares;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -24,7 +24,6 @@ class SanitizerMiddleware implements MiddlewareInterface
 
         return $handler->handle($request);
     }
-
 
     /**
      * @param array<mixed>|object $body

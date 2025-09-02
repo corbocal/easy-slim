@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Enums;
+namespace Corbocal\EasySlim\Enums\Logger;
 
 enum PsrLevelsEnum: string
 {
@@ -14,12 +14,4 @@ enum PsrLevelsEnum: string
     case NOTICE = "notice";
     case INFO = "info";
     case DEBUG = "debug";
-
-    /**
-     * @return array<string>
-     */
-    public static function all(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

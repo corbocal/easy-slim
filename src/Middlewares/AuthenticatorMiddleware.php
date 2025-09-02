@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Application\Middlewares;
+namespace Corbocal\EasySlim\Middlewares;
 
+use Corbocal\EasySlim\Exceptions\Http\ForbiddenException;
+use Corbocal\EasySlim\Security\AuthenticationWrapper;
 use Corbocal\EasySlim\Security\Enums\AuthenticatorsEnum;
 use Corbocal\EasySlim\Security\Enums\ClearancesEnum;
 use Corbocal\EasySlim\Settings\SettingsInterface;
@@ -20,13 +22,13 @@ class AuthenticatorMiddleware implements MiddlewareInterface
 {
     /**
      * @param array<AuthenticatorsEnum> $authenticationModes
-     * @param array<ClearancesEnum> $clearances
+     * @param ClearancesEnum $clearance
      * @param LoggerInterface $logger
      * @param SettingsInterface $settings
      */
     public function __construct(
         protected array $authenticationModes,
-        protected array $clearances,
+        protected ClearancesEnum $clearance,
         protected LoggerInterface $logger,
         protected SettingsInterface $settings
     ) {
@@ -36,6 +38,22 @@ class AuthenticatorMiddleware implements MiddlewareInterface
     {
         if (!$this->settings->isProd()) {
             return $handler->handle($request);
+        }
+
+        $security = new AuthenticationWrapper(
+            $this->authenticationModes,
+            $this->clearance,
+            $request,
+            $this->settings
+        );
+
+        if (!$security->handle()) {
+            throw new ForbiddenException(
+                "You are not allowed to access this resource.",
+                "FORBIDDEN",
+                [],
+                $security->getDataForLog()
+            );
         }
 
         return $handler->handle($request);

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Corbocal\EasySlim\Application\Actions;
+namespace Corbocal\EasySlim\Actions;
 
 use Corbocal\EasySlim\Enums\Http\HeadersEnum;
 use Corbocal\EasySlim\Enums\Http\StatusCodesEnum;
-use Corbocal\EasySlim\Enums\PsrLevelsEnum;
-use Corbocal\EasySlim\Logger\DTO\ResponseLog;
+use Corbocal\EasySlim\Enums\Logger\PsrLevelsEnum;
+use Corbocal\EasySlim\Logger\Dto\ResponseLog;
 use Corbocal\EasySlim\Logger\LoggerTrait;
 use Corbocal\EasySlim\Traits\RequestTrait;
 use Corbocal\EasySlim\Traits\ResponseTrait;
